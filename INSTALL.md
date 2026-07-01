@@ -284,6 +284,45 @@ http://192.168.64.2:3000
 
 ---
 
+## 문제 해결 — 로그 확인 및 직접 테스트 방법
+
+브라우저에서 채팅 중 에러가 나면, 기존 SSH 세션은 그대로 두고 **새 터미널을 하나 더 열어서** 실시간 로그를 띄운 채로 브라우저에서 재현하는 방식이 원인 파악에 효과적.
+
+### 1. 로그 확인 방법
+
+1. 맥북에서 **새 터미널 창/탭**을 연다 (기존 세션은 유지).
+2. 새 터미널에서 SSH 접속:
+```bash
+ssh admin@192.168.64.2
+```
+3. Open WebUI 컨테이너 로그를 실시간으로 확인:
+```bash
+podman logs -f open-webui
+```
+   - `-f`(follow) 옵션으로 이후 발생하는 로그가 계속 스트리밍됨. 종료는 `Ctrl+C`.
+   - 과거 로그만 볼 때는 `podman logs --tail 100 open-webui` (옵션이 컨테이너 이름보다 **앞**에 와야 함, podman 4.9.4 기준).
+4. 이 상태로 두고 브라우저에서 문제 상황을 재현하면, 그 순간의 에러/트레이스백이 실시간으로 출력됨.
+
+### 2. 터미널에서 직접 메시지 보내 테스트 (Open WebUI 우회)
+
+Open WebUI를 거치지 않고 Ollama API에 직접 요청을 보내면, 문제가 **Ollama 쪽인지 Open WebUI 쪽인지** 구분할 수 있음.
+
+```bash
+curl http://192.168.64.2:11434/api/chat -d '{
+  "model": "gemma3:4b",
+  "messages": [
+    { "role": "user", "content": "안녕" }
+  ],
+  "stream": false
+}'
+```
+
+- 정상 응답(`message.content`에 답변)이 오면 → Ollama는 정상, Open WebUI 쪽 문제로 범위 좁혀짐.
+- 응답 중 `load_duration` 값이 크면(수십 초 단위) → 모델이 메모리에서 언로드되어 있다가 다시 로드되는 콜드 스타트 상태. Ollama는 기본적으로 일정 시간(기본 5분) 미사용 시 모델을 언로드함.
+- 여기서도 에러가 나면 → Ollama/모델 자체 문제이므로 `systemctl status ollama`, `journalctl -u ollama` 로 추가 확인.
+
+---
+
 ## 다음 단계
 
 - [ ] DB 컨테이너 (PostgreSQL)
