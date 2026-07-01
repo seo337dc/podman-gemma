@@ -68,8 +68,8 @@
 - [x] GitHub repo 생성
 - [x] VMware Fusion 설치
 - [x] Rocky Linux 8.10 ISO 다운로드
-- [ ] VM 생성 및 Rocky Linux 설치
-- [ ] Podman 설치
+- [x] VM 생성 및 Rocky Linux 설치
+- [x] Podman 설치
 - [ ] Ollama + Gemma 설치
 - [ ] Open WebUI 컨테이너 실행
 - [ ] 브라우저에서 AI 채팅 확인

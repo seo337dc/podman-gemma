@@ -7,7 +7,7 @@
 ## 환경 구성
 
 - [x] 개인 노트북에 VM 소프트웨어 설치 (VirtualBox / VMware / KVM)
-- [ ] VM1 생성 — Rocky Linux 8.10 설치
+- [x] VM1 생성 — Rocky Linux 8.10 설치
 - [ ] VM2 생성 — Rocky Linux 8.10 설치
 - [ ] VM간 내부 네트워크 설정
 
@@ -16,7 +16,7 @@
 ## VM1 — Podman 호스트 설정
 
 - [ ] Rocky 8.10 기본 설정 (hostname, timezone, locale)
-- [ ] Podman 설치 (`dnf install podman`)
+- [x] Podman 설치 (`dnf install podman`)
 - [ ] firewalld 포트 오픈 (11434, 3000 등)
 - [ ] SELinux 설정 확인
 
