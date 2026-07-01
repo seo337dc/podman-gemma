@@ -114,6 +114,14 @@
 git remote set-url origin https://seo337dc:$(gh auth token)@github.com/seo337dc/podman-gemma.git
 ```
 
+### VM 재부팅 후 서비스 재실행 확인
+
+- **문제**: VM 재시작 후 `ssh admin@192.168.64.2` 시 `Operation timed out`
+- **원인**: `enp0s1` NetworkManager 프로필의 autoconnect가 꺼져 있어 재부팅 시 IP를 자동으로 못 받음 (`ip addr`에서 enp0s1에 inet 항목 없음)
+- **해결**: UTM 콘솔에서 직접 로그인 → `sudo nmcli con up enp0s1` 로 수동 활성화 → IP(`192.168.64.2`) 재할당 확인 후 SSH 재시도 성공
+- **추가 확인**: `open-webui` 컨테이너가 `STATUS: Created` 상태(한 번도 시작 안 됨)였음 → `podman start open-webui` 로 해결
+- INSTALL.md의 "VM 재시작 후 서비스 실행 방법" 섹션에 위 트러블슈팅 절차 반영
+
 ---
 
 <!-- 아래 형식으로 계속 추가 -->

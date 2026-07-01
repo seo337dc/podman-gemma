@@ -216,29 +216,61 @@ sudo shutdown -h now
 ## VM 재시작 후 서비스 실행 방법
 
 1. **UTM 실행** → `rocky-vm1` 선택 → **▶ 플레이 버튼**
+   - Rocky Linux 로고 스플래시 화면이 뜨고 GNOME 로그인 화면까지 올라올 때까지 기다림 (완전 부팅 전에는 SSH 연결 안 됨)
 
 2. **맥북 터미널에서 SSH 접속**:
 ```bash
 ssh admin@192.168.64.2
 ```
 
-3. **네트워크 활성화** (필요시):
+- 정상이면 비밀번호 입력 후 바로 접속됨.
+- **`ssh: connect to host 192.168.64.2 port 22: Operation timed out`** 에러가 뜨면 3번(네트워크 활성화)으로 이동.
+
+3. **SSH 타임아웃 시 — UTM VM 콘솔에서 직접 로그인 후 네트워크 확인/복구**:
+
+UTM 창을 클릭해서 VM 화면에 직접 로그인한 뒤:
+
 ```bash
+# 인터페이스 상태 확인 — enp0s1에 inet(IP) 항목이 없으면 DHCP 실패 상태
+ip addr
+
+# nmcli로 연결 상태 확인
+nmcli device status
+# enp0s1 STATE가 "연결 끊겼음(disconnected)"이면 아래 실행
+
 sudo nmcli con up enp0s1
+
+# 재확인 — inet 192.168.64.x/24 가 잡혀야 정상
+ip addr show enp0s1
 ```
+
+IP가 정상적으로 잡히면 맥북 터미널로 돌아가 2번(SSH 접속)을 재시도.
+
+> **원인**: `enp0s1` NetworkManager 프로필의 autoconnect가 꺼져 있어 VM 재부팅마다 IP를 자동으로 받아오지 못하고 매번 수동으로 `nmcli con up enp0s1`을 해줘야 하는 상태. 재발 방지하려면 (선택):
+> ```bash
+> sudo nmcli con mod enp0s1 connection.autoconnect yes
+> ```
 
 4. **서비스 상태 확인**:
 ```bash
-# Ollama 상태 확인 (자동 시작됨)
+# Ollama 상태 확인 (자동 시작됨, Active: active (running) 이어야 정상)
 systemctl status ollama
+
+# Ollama API 응답 확인
+curl http://192.168.64.2:11434/api/tags
 
 # 컨테이너 상태 확인
 podman ps -a
 ```
 
-5. **Open WebUI 시작** (꺼져 있을 경우):
+- `open-webui` 컨테이너의 `STATUS`가 `Up ...`이 아니라 `Created` 또는 `Exited`이면 5번으로 이동.
+
+5. **Open WebUI 시작** (꺼져 있거나 `Created` 상태일 경우):
 ```bash
 podman start open-webui
+
+# 재확인 — STATUS가 "Up X seconds/minutes"로 바뀌어야 정상
+podman ps -a
 ```
 
 6. **브라우저 접속**:
@@ -248,6 +280,7 @@ http://192.168.64.2:3000
 
 > Ollama는 systemd 서비스로 등록되어 있어 VM 부팅 시 자동 시작됨.
 > Open WebUI 컨테이너는 수동으로 시작해야 함 (`podman start open-webui`).
+> `enp0s1` 네트워크는 재부팅마다 수동 활성화가 필요할 수 있음 (3번 참고).
 
 ---
 
