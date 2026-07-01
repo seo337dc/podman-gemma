@@ -124,6 +124,37 @@ ollama --version
 - systemd 서비스 자동 등록 (부팅 시 자동 시작)
 - GPU 없으면 CPU-only 모드로 동작 (정상)
 
+### Ollama 외부 접근 설정 (필수)
+
+기본값은 `127.0.0.1`만 허용 → Open WebUI에서 접근 불가. 반드시 아래 설정 필요:
+
+```bash
+sudo systemctl edit ollama
+```
+
+에디터에 아래 내용 입력:
+```
+[Service]
+Environment="OLLAMA_HOST=0.0.0.0"
+```
+
+저장 (`Ctrl+X` → `Y` → `Enter`) 후:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+
+# 외부 접근 확인
+curl http://192.168.64.2:11434/api/tags
+```
+
+### firewalld Ollama 포트 오픈
+
+```bash
+sudo firewall-cmd --add-port=11434/tcp --permanent
+sudo firewall-cmd --reload
+```
+
 ---
 
 ## 8단계 — Gemma 모델 다운로드
@@ -162,6 +193,57 @@ podman run -d \
 > `v0.6.5` 사용 권장.
 
 브라우저에서 접속: `http://192.168.64.2:3000`
+
+---
+
+---
+
+## VM 종료 방법
+
+```bash
+# SSH 터미널에서 종료
+sudo shutdown -h now
+```
+
+또는 UTM에서 VM 우클릭 → **정지**
+
+---
+
+## VM 재시작 후 서비스 실행 방법
+
+1. **UTM 실행** → `rocky-vm1` 선택 → **▶ 플레이 버튼**
+
+2. **맥북 터미널에서 SSH 접속**:
+```bash
+ssh admin@192.168.64.2
+```
+
+3. **네트워크 활성화** (필요시):
+```bash
+sudo nmcli con up enp0s1
+```
+
+4. **서비스 상태 확인**:
+```bash
+# Ollama 상태 확인 (자동 시작됨)
+systemctl status ollama
+
+# 컨테이너 상태 확인
+podman ps -a
+```
+
+5. **Open WebUI 시작** (꺼져 있을 경우):
+```bash
+podman start open-webui
+```
+
+6. **브라우저 접속**:
+```
+http://192.168.64.2:3000
+```
+
+> Ollama는 systemd 서비스로 등록되어 있어 VM 부팅 시 자동 시작됨.
+> Open WebUI 컨테이너는 수동으로 시작해야 함 (`podman start open-webui`).
 
 ---
 
