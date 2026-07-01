@@ -86,3 +86,57 @@ systemctl start ollama    # 서비스 시작
 systemctl enable ollama   # 부팅 시 자동 시작 등록
 systemctl status ollama   # 상태 확인
 ```
+
+---
+
+## VMware Fusion
+
+- macOS에서 VM을 실행하는 소프트웨어
+- **Fusion 13**: Intel Mac 지원, 개인용 무료
+- **Fusion 26H1/25H2**: 최신 버전, Apple Silicon 최적화
+- Intel Mac에는 13 버전이 더 안정적
+
+### ISO란?
+- CD/DVD 디스크 이미지 파일
+- OS 설치 시 이 파일을 VM에 마운트해서 설치
+- **DVD ISO**: 오프라인 설치 가능한 전체 패키지 (약 10GB)
+- **Minimal ISO**: 최소 패키지만 포함, 나머지는 인터넷으로 설치 (약 1GB)
+- 폐쇄망 환경이므로 반드시 **DVD ISO** 사용
+
+### VM 만들 때 주요 설정
+- **CPU**: 물리 코어의 절반 이하 할당 권장 (호스트 성능 유지)
+- **RAM**: Gemma 4B 기준 최소 6GB, 권장 8GB
+- **디스크**: 최소 50GB (OS + 모델 파일 포함)
+- **네트워크**: NAT (기본) or Host-only (폐쇄망 구성 시)
+
+---
+
+## 네트워크 모드 (VM)
+
+| 모드 | 설명 | 용도 |
+|------|------|------|
+| NAT | VM이 호스트 네트워크를 통해 인터넷 접속 | 기본값, 외부 접속 가능 |
+| Bridged | VM이 호스트와 동일한 네트워크에 연결 | VM을 독립 PC처럼 사용 |
+| Host-only | VM↔호스트 간 통신만 가능, 인터넷 차단 | 폐쇄망 시뮬레이션 |
+
+이 프로젝트에서는 **Host-only** 또는 **Custom 내부망** 사용 예정
+
+---
+
+## Git 인증 방식
+
+### HTTPS vs SSH
+- **HTTPS**: ID/PW 또는 토큰으로 인증, 설정 쉬움
+- **SSH**: 키 쌍으로 인증, 한번 설정하면 편리
+
+### GitHub CLI (gh)
+- `gh auth login`: GitHub 계정 인증
+- `gh auth token`: 현재 인증된 토큰 출력
+- 인증 후 `git push`가 자동으로 해당 계정으로 동작
+
+### 여러 GitHub 계정 사용 시 주의
+- 로컬에 여러 계정이 있으면 push 시 엉뚱한 계정으로 시도할 수 있음
+- remote URL에 계정 명시하면 해결:
+  ```bash
+  git remote set-url origin https://계정명:토큰@github.com/계정명/repo.git
+  ```
