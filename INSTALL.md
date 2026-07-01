@@ -141,6 +141,32 @@ ollama list
 
 ---
 
+## 9단계 — Open WebUI 실행
+
+```bash
+# firewalld 포트 오픈
+sudo firewall-cmd --add-port=3000/tcp --permanent
+sudo firewall-cmd --add-port=8080/tcp --permanent
+sudo firewall-cmd --reload
+
+# Open WebUI 컨테이너 실행 (v0.6.5 권장 — main 버전은 Gemma3와 tools 호환 문제)
+podman run -d \
+  --name open-webui \
+  -p 3000:8080 \
+  --add-host=host.docker.internal:host-gateway \
+  -e OLLAMA_BASE_URL=http://192.168.64.2:11434 \
+  ghcr.io/open-webui/open-webui:v0.6.5
+```
+
+> ⚠️ `open-webui:main` (v0.10+) 은 Gemma3:4b와 tools 호환 문제로 채팅 불가.
+> `v0.6.5` 사용 권장.
+
+브라우저에서 접속: `http://192.168.64.2:3000`
+
+---
+
 ## 다음 단계
 
-- [ ] Open WebUI 컨테이너 실행 (Podman)
+- [ ] DB 컨테이너 (PostgreSQL)
+- [ ] Backend 컨테이너
+- [ ] Podman Compose로 통합 관리

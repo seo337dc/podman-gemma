@@ -92,9 +92,14 @@
 - **원인**: `--network=host` 사용 시 포트 매핑 옵션 무효화
 - **해결**: `--network=host` 사용 시 8080 포트로 직접 접속
 
+### Open WebUI 버전 이슈 해결
+
+- `open-webui:main` (v0.10.1) → Gemma3:4b와 tools 호환 문제로 채팅 불가
+- 에러: `registry.ollama.ai/library/gemma3:4b does not support tools`
+- **해결**: `open-webui:v0.6.5` 로 다운그레이드 → 채팅 정상 동작 확인
+
 ### 다음 작업 계획
 
-- Open WebUI HuggingFace 다운로드 완료 후 채팅 동작 확인
 - DB(PostgreSQL) 컨테이너 추가
 - Backend 컨테이너 추가
 - Podman Compose로 전체 서비스 통합 관리

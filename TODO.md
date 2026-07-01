@@ -44,8 +44,8 @@
 ## Podman 서비스
 
 - [x] Open WebUI 컨테이너 실행
-- [ ] Open WebUI ↔ Ollama 연결 확인 (진행 중 — HuggingFace 파일 다운로드 중)
-- [ ] 웹 브라우저에서 채팅 정상 동작 확인
+- [x] Open WebUI ↔ Ollama 연결 확인
+- [x] 웹 브라우저에서 채팅 정상 동작 확인 (v0.6.5로 해결)
 - [ ] Podman Compose 파일 작성 (서비스 관리용)
 
 ---
