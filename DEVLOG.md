@@ -68,10 +68,36 @@
 - **원인**: Rocky Linux에 zstd 미설치
 - **해결**: `sudo dnf install -y zstd` 후 재설치
 
+### SSH 원격 접속 설정
+
+- VM1 IP: `192.168.64.2`
+- macOS 터미널에서 `ssh admin@192.168.64.2` 접속 성공
+- 이후 모든 작업 맥북 터미널(SSH)에서 진행
+
+### Open WebUI 설치
+
+- `podman run` 으로 Open WebUI 컨테이너 실행
+- 초기 실행 시 `ERR_CONNECTION_REFUSED` → firewalld 3000 포트 오픈으로 해결
+- Ollama 연결 문제 (`host.containers.internal` 미작동) → `--network=host` 옵션으로 변경
+- Ollama 기본 설정이 `127.0.0.1`만 허용 → `OLLAMA_HOST=0.0.0.0` 설정 후 해결
+- HuggingFace에서 sentence-transformers 모델 다운로드 중 (초기 구동 시 필요)
+
+### 이슈
+
+- **문제**: Open WebUI에서 Ollama 모델 연결 안 됨
+- **원인**: Ollama가 `127.0.0.1:11434`만 리슨, 외부 접근 불가
+- **해결**: `sudo systemctl edit ollama` → `Environment="OLLAMA_HOST=0.0.0.0"` 추가 후 재시작
+
+- **문제**: `podman run -p 3000:8080 --network=host` 포트 매핑 무시됨
+- **원인**: `--network=host` 사용 시 포트 매핑 옵션 무효화
+- **해결**: `--network=host` 사용 시 8080 포트로 직접 접속
+
 ### 다음 작업 계획
 
-- VM 화면이 작고 불편 → SSH 원격 접속으로 전환 예정
-- 맥북 터미널에서 직접 VM 제어하는 방식으로 개선
+- Open WebUI HuggingFace 다운로드 완료 후 채팅 동작 확인
+- DB(PostgreSQL) 컨테이너 추가
+- Backend 컨테이너 추가
+- Podman Compose로 전체 서비스 통합 관리
 
 ### 이슈
 

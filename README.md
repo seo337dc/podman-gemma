@@ -71,8 +71,9 @@
 - [x] VM 생성 및 Rocky Linux 설치
 - [x] Podman 설치
 - [x] Ollama + Gemma 설치
-- [ ] Open WebUI 컨테이너 실행
-- [ ] 브라우저에서 AI 채팅 확인
+- [x] SSH 원격 접속 설정
+- [x] Open WebUI 컨테이너 실행
+- [ ] 브라우저에서 AI 채팅 확인 (진행 중)
 
 ---
 
