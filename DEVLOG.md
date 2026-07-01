@@ -68,6 +68,11 @@
 - **원인**: Rocky Linux에 zstd 미설치
 - **해결**: `sudo dnf install -y zstd` 후 재설치
 
+### 다음 작업 계획
+
+- VM 화면이 작고 불편 → SSH 원격 접속으로 전환 예정
+- 맥북 터미널에서 직접 VM 제어하는 방식으로 개선
+
 ### 이슈
 
 - **문제**: GitHub push 시 403 Permission denied

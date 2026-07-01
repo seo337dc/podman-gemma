@@ -31,6 +31,15 @@
 
 ---
 
+## SSH 원격 접속 설정
+
+- [ ] VM1 IP 확인
+- [ ] SSH 서비스 활성화 (sshd)
+- [ ] macOS 터미널에서 SSH 접속 확인
+- [ ] firewalld SSH 포트 오픈 확인 (22번)
+
+---
+
 ## Podman 서비스
 
 - [ ] Open WebUI 컨테이너 설정
