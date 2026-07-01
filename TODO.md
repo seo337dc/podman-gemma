@@ -6,7 +6,7 @@
 
 ## 환경 구성
 
-- [ ] 개인 노트북에 VM 소프트웨어 설치 (VirtualBox / VMware / KVM)
+- [x] 개인 노트북에 VM 소프트웨어 설치 (VirtualBox / VMware / KVM)
 - [ ] VM1 생성 — Rocky Linux 8.10 설치
 - [ ] VM2 생성 — Rocky Linux 8.10 설치
 - [ ] VM간 내부 네트워크 설정
