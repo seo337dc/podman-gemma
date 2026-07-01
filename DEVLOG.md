@@ -122,6 +122,14 @@ git remote set-url origin https://seo337dc:$(gh auth token)@github.com/seo337dc/
 - **추가 확인**: `open-webui` 컨테이너가 `STATUS: Created` 상태(한 번도 시작 안 됨)였음 → `podman start open-webui` 로 해결
 - INSTALL.md의 "VM 재시작 후 서비스 실행 방법" 섹션에 위 트러블슈팅 절차 반영
 
+### Open WebUI 'messages' 에러 (모델 콜드 스타트 추정)
+
+- **문제**: 브라우저에서 `gemma3:4b`에 첫 메시지 전송 시 채팅창에 `'messages'` 에러 표시. 이후 재전송하면 정상 동작
+- **디버깅**: `podman logs -f open-webui`로 실시간 로그를 띄우고 재현 시도 → 별도로 `curl http://192.168.64.2:11434/api/chat`로 Ollama에 직접 요청해서 정상 응답 확인, 문제 범위를 Open WebUI 쪽으로 좁힘
+- **원인 추정**: curl 응답의 `load_duration`이 약 30초로 확인됨 — Ollama가 일정 시간(기본 5분) 미사용 시 모델을 메모리에서 언로드했다가, 재요청 시 디스크에서 다시 로드하는 콜드 스타트 지연으로 추정. CPU-only 4코어 VM이라 로딩이 느림. 이 지연 동안 Open WebUI가 완전한 응답을 못 받아 `messages` 필드 파싱에 실패하는 것으로 보임 (트레이스백으로 확정하지는 못함)
+- **확인된 우회**: 모델이 메모리에 로드된(warm) 상태에서는 정상 동작
+- **미확정**: 5분 이상 미사용 후 재현되는지는 추가 확인 필요
+
 ---
 
 <!-- 아래 형식으로 계속 추가 -->
