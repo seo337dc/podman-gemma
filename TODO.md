@@ -24,11 +24,9 @@
 
 ## Ollama + Gemma 설치
 
-- [ ] 인터넷 환경에서 Ollama 바이너리 다운로드
-- [ ] Gemma 모델 다운로드 (`gemma3:4b` 또는 크기 결정)
-- [ ] VM1에 Ollama 오프라인 설치
-- [ ] 모델 파일 VM1으로 복사
-- [ ] systemd 서비스 등록 (부팅 시 자동 시작)
+- [x] Ollama 설치 (v0.31.1, systemd 자동 등록)
+- [x] Gemma 3 4B 모델 다운로드
+- [x] systemd 서비스 등록 (부팅 시 자동 시작)
 - [ ] API 동작 확인 (`curl http://localhost:11434/api/tags`)
 
 ---

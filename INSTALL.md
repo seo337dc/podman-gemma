@@ -106,8 +106,41 @@ podman --version
 
 ---
 
+## 7단계 — Ollama 설치
+
+```bash
+# zstd 먼저 설치 (없으면 Ollama 설치 오류 발생)
+sudo dnf install -y zstd
+
+# Ollama 설치
+curl -fsSL https://ollama.com/install.sh | sh
+
+# 버전 확인
+ollama --version
+# ollama version is 0.31.1
+```
+
+- API 주소: `http://127.0.0.1:11434`
+- systemd 서비스 자동 등록 (부팅 시 자동 시작)
+- GPU 없으면 CPU-only 모드로 동작 (정상)
+
+---
+
+## 8단계 — Gemma 모델 다운로드
+
+```bash
+# Gemma 3 4B 모델 다운로드 (약 3GB)
+ollama pull gemma3:4b
+
+# 동작 테스트
+ollama run gemma3:4b "안녕하세요"
+
+# 설치된 모델 목록 확인
+ollama list
+```
+
+---
+
 ## 다음 단계
 
-- [ ] Ollama 설치
-- [ ] Gemma 모델 다운로드
-- [ ] Open WebUI 컨테이너 실행
+- [ ] Open WebUI 컨테이너 실행 (Podman)

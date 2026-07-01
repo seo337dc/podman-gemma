@@ -41,6 +41,15 @@
 - `sudo dnf install -y podman` 설치 완료
 - 버전 확인: `podman version 4.9.4-rhel`
 
+### Ollama + Gemma 설치
+
+- `zstd` 미설치로 Ollama 설치 실패 → `sudo dnf install -y zstd` 후 재시도
+- Ollama 0.31.1 설치 완료 (`/usr/local`, systemd 서비스 자동 등록)
+- API 주소: `127.0.0.1:11434`
+- GPU 없음 → CPU-only 모드 (정상)
+- Gemma 3 4B 모델 다운로드 완료 (`ollama pull gemma3:4b`)
+- 동작 확인: `ollama run gemma3:4b "안녕하세요"` → 정상 응답
+
 ### 이슈
 
 - **문제**: VMware Fusion 13에서 ISO 인식 1시간 이상 소요
@@ -54,6 +63,10 @@
 - **문제**: `sudo dnf install` 시 네트워크 오류
 - **원인**: VM 네트워크 인터페이스(enp0s1)가 비활성 상태
 - **해결**: `sudo nmcli con up enp0s1` 으로 활성화
+
+- **문제**: Ollama 설치 시 `ERROR: This version requires zstd`
+- **원인**: Rocky Linux에 zstd 미설치
+- **해결**: `sudo dnf install -y zstd` 후 재설치
 
 ### 이슈
 
